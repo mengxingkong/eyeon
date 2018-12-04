@@ -83,7 +83,7 @@
     <orderEntry type="module-library">
       <library name="Maven: submail-sdk:submail-sdk:1.0">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/submail-sdk-1.0.jar!/" />
+          <root url="jar://D:/Jfinal-demo/jfinal-demo-web/lib/submail-sdk-1.0.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
@@ -92,7 +92,7 @@
     <orderEntry type="module-library">
       <library name="Maven: jave:jave:1.0.2">
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/jave-1.0.2.jar!/" />
+          <root url="jar://D:/Jfinal-demo/jfinal-demo-web/lib/jave-1.0.2.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
