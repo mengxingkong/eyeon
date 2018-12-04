@@ -1,0 +1,270 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weui2/style/weui.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui2.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui3.css"/>
+    <script src="../weui2/zepto.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kB1nQHtOYybtAbZYpXseO3cPMgAdsxHX"></script>
+    <script>
+        $(function(){
+            $('.weui-menu-inner').click(function () {
+                var $menu = $(this).find('ul'),
+                    height = $menu.find('li').length * 40 + 15 + 'px',
+                    opacity = $menu.css('opacity');
+
+                $('.weui-menu-inner ul').css({
+                    'top': '0',
+                    'opacity': '0'
+                });
+
+                if(opacity == 0) {
+                    $menu.css({
+                        'top': '-' + height,
+                        'opacity': 1
+                    });
+                }else {
+                    $menu.css({
+                        'top': 0,
+                        'opacity': 0
+                    });
+                }
+            });
+
+        });
+    </script>
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+</head>
+
+<body >
+<div id="allmap">
+
+</div>
+<div id="hide">
+    <input hidden="hidden" value="#(rescue.Longitude)" id="lng" />
+    <input hidden="hidden" value="#(rescue.Latitude)" id="lat"/>
+</div>
+<section class="weui-menu">
+    <div class="weui-menu-inner">
+        <em></em>
+        <span>资源</span>
+        <ul>
+            <em></em>
+            <li><a href="javascript:;" id="resources">附近资源</a></li>
+        </ul>
+    </div>
+    <div class="weui-menu-inner" id="rescuer">
+        <em></em>
+        <span>救援人</span>
+    </div>
+    <div class="weui-menu-inner">
+        <em></em>
+        <span>上线测试</span>
+        <ul>
+            <em></em>
+            <li>百度地图</li>
+        </ul>
+    </div>
+</section>
+</body>
+</html>
+
+
+<script type="text/javascript">
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point($("#lng").val(),$("#lat").val());
+    map.centerAndZoom(point, 15);
+
+    // 编写自定义函数,创建标注
+    function addMarker(point){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+        var myGeo = new BMap.Geocoder();
+        marker.addEventListener("click", function(){
+            myGeo.getLocation(point, function(result){
+                if (result){
+                    alert(result.address);
+                }
+            });
+        });
+    }
+    addMarker(point);
+
+    var opts = {
+        width : 200,     // 信息窗口宽度
+        height: 100,     // 信息窗口高度
+        title : "救援信息：" , // 信息窗口标题
+        enableMessage:true,//设置允许信息窗发送短息
+        message:"hello"
+    };
+    function addMarker2(point,res){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        getAddress(point,function (finalAddress) {
+            var add = finalAddress;
+        var infoWindow = new BMap.InfoWindow("<span style=\"font-size:8px\">地点:'"+add+"'</span><br>" +
+            "<span style=\"font-size:8px\">装置信息:'"+res.Describe+"'</span>" +
+            "<br><button id='road' onclick='resRequest(this)' value='"+res.Id+"'  >请求资源<button />", opts);  // 创建信息窗口对
+            marker.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow,point); //开启信息窗口
+            });
+        });
+    }
+
+
+    function resRequest(_this) {
+        var resID = _this.value;
+        $.ajax({
+            type:"post",
+            url:"/rescue/resRequest",
+            data:{
+                "resID":resID
+            },
+            success:function (data) {
+                if("ok" === data.res){
+                    alert("资源请求成功，请等候");
+                }
+                else{
+                    alert("资源已被分配，请选择其他资源");
+                }
+            },
+            error:function () {
+
+            }
+        });
+    }
+
+    function getAddress(point,callback) {
+        var add = "";
+        var myGeo = new BMap.Geocoder();
+        myGeo.getLocation(point, function(result){
+            if (result){
+                add = result.address;
+                callback(add);
+            }
+        });
+
+    }
+
+    $("#resources").on("click",function () {
+        $.ajax({
+            type:"post",
+            url: "/rescue/showResources",
+            data:{
+                "lng":$("#lng").val(),
+                "lat":$("#lat").val()
+            },
+            success:function (data) {
+                var dt = data.res;
+                for(var a in dt){
+                    var lng = dt[a].longitude;
+                    var lat = dt[a].latitude;
+                    var point = new BMap.Point(lng,lat);
+                    addMarker2(point,dt[a]);
+                }
+            },
+            error:function () {
+
+            }
+        });
+    });
+
+    $("#rescuer").on("click",function () {
+        $.ajax({
+            type:"post",
+            url:"/rescue/showRescuer",
+            data:{
+                "lng":$("#lng").val(),
+                "lat":$("#lat").val()
+            },
+            success:function (data) {
+                var lng = data.lng;
+                var lat = data.lat;
+
+
+                var point = new BMap.Point(lng,lat);
+                var resc = data.resc;
+                addMarker3(point,resc);
+            },
+            error:function () {
+
+            }
+        });
+    });
+
+    function addMarker3(point,resc){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+        getAddress(point,function (finalAddress) {
+            var add = finalAddress;
+            var infoWindow = new BMap.InfoWindow("<span style=\"font-size:8px\">地点:'"+add+"'</span><br>" +
+                "<span style=\"font-size:8px\">人员信息:'"+resc.Name+" 电话"+resc.PhoneNumber+"'</span>" +
+                "<br><button id='road' onclick='phoneRequest(this)' value='"+resc.PhoneNumber+"'  >电话联系<button />", opts);  // 创建信息窗口对
+            marker.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow,point); //开启信息窗口
+            });
+        });
+    }
+
+    function phoneRequest(_this) {
+        var phone = _this.value;
+        alert(phone+": 模拟电话");
+    }
+</script>
+
+
+<!--$("#resources").on("click",function () {-->
+<!--$.ajax({-->
+<!--type:"post",-->
+<!--url: "/rescue/showResources",-->
+<!--data:{-->
+<!--"lng":$("#lng").val(),-->
+<!--"lat":$("#lat").val()-->
+<!--},-->
+<!--success:function (data) {-->
+<!--var dt  = data.res;-->
+<!--for(var a in dt){-->
+<!--var lng = dt[a].longitude;-->
+<!--var lat = dt[a].latitude;-->
+<!--var point1 = new BMap.Point(lng,lat);-->
+<!--var marker1 = new BMap.Marker(point1);-->
+<!--map.addOverlay(marker1);-->
+<!--var myGeo1 = new BMap.Geocoder();-->
+<!--alert(lng+","+lat);-->
+<!--marker1.addEventListener("click", function(){-->
+<!--myGeo1.getLocation(new BMap.Point(lng,lat), function(result){-->
+<!--if (result){-->
+<!--alert(result.address);-->
+<!--}-->
+<!--});-->
+<!--});-->
+<!--}-->
+<!--},-->
+<!--error:function () {-->
+
+<!--}-->
+<!--});-->
+<!--});-->
+
+<!--var opts = {-->
+<!--width : 200,     // 信息窗口宽度-->
+<!--height: 100,     // 信息窗口高度-->
+<!--title : "救援资源信息：" , // 信息窗口标题-->
+<!--enableMessage:true,//设置允许信息窗发送短息-->
+<!--message:"亲耐滴，晚上一起吃个饭吧？戳下面的链接看下地址喔~"-->
+<!--}-->
+<!--var add = document.getElementById("add");-->
+
+
+<!--var infoWindow = new BMap.InfoWindow("<span style=\"font-size:8px\">地点:'"+finalAddress+"'</span><br>" +-->
+<!--"<span style=\"font-size:8px\">装置信息:'"+des+"'</span>" +-->
+<!--"<br><button id='road' onclick='roadPlan()' >道路规划<tton>", opts);  // 创建信息窗口对-->
+    <!--startmaker.addEventListener("click", function(){-->
+    <!--map.openInfoWindow(infoWindow,startpoint); //开启信息窗口-->
+    <!--});-->

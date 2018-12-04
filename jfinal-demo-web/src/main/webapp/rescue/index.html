@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>救援首页</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="/weui2/style/weui.css" />
+    <link rel="stylesheet" href="/weui2/style/weui2.css" />
+    <link rel="stylesheet" href="/weui2/style/weui3.css" />
+    <script src="/weui2/zepto.min.js"></script>
+    <script src="/weui2/php.js"></script>
+
+    <script>
+        $(function() {
+            $('.js-category').click(function() {
+                $parent = $(this).parent('li');
+                if ($parent.hasClass('js-show')) {
+                    $parent.removeClass('js-show');
+                    $(this).children('i').removeClass('icon-35').addClass('icon-74');
+                } else {
+                    $parent.siblings().removeClass('js-show');
+                    $parent.addClass('js-show');
+                    $(this).children('i').removeClass('icon-74').addClass('icon-35');
+                    $parent.siblings().find('i').removeClass('icon-35').addClass('icon-74');
+                }
+            });
+        });
+    </script>
+    <style type="text/css">
+
+    </style>
+
+</head>
+<body>
+<div class="tcenter" style="overflow:hidden;width:100%;height: 30px;background: blue">
+    <p>滚动消息提示</p>
+</div>
+
+<div class="page-hd"  style="background-image: url(./image/top2.jpg);width: 100%;height: 100px">
+
+</div>
+<div class="page-hd"  style="width: 100%;height:auto;background-color: white">
+    <div style="width:100%;margin-bottom: 20px">
+        <div style="width: 48%;float: left;text-align: center">
+            <a href="/rescue/rescueRequest" style="color: black">
+                请求救援
+            </a>
+        </div>
+        <span style="float: left">|</span>
+        <div style="width: 48%;float: left;text-align: center">
+            <a href="/rescue/rescueStatus" style="color: black">
+                当前状态
+            </a>
+        </div>
+    </div>
+</div>
+<HR style="FILTER: alpha(opacity=100,finishopacity=0,style=2)" width="100%" color=#987cb9 SIZE=10>
+<div class="page-bd">
+    <ul>
+        <li>
+            <div class="weui-flex js-category">
+                <div class="weui-flex-item">1.救援事件</div>
+                <i class="icon icon-74"></i>
+            </div>
+            <div class="page-category js-categoryInner">
+                <div class="weui_cells weui_cells_access" style="margin-top: 0px;">
+                    <a class="weui_cell" href="/rescue/showNearby">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>我的附近</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+                    <a class="weui_cell" href="/rescue/showDistribute">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>系统分配</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+                </div>
+            </div>
+        </li>
+
+
+        <li>
+            <div class="weui-flex js-category">
+                <p class="weui-flex-item">2.往期集锦</p>
+                <i class="icon icon-74"></i>
+            </div>
+            <div class="page-category js-categoryInner">
+                <div class="weui_cells weui_cells_access" style="margin-top: 0px;">
+
+                    <a class="weui_cell" href="../weui2/c/base1.html">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p class="weui-reddot">救援历史</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+
+                </div>
+            </div>
+        </li>
+
+        <li>
+            <div class="weui-flex js-category">
+                <p class="weui-flex-item">3.救援反馈</p>
+                <i class="icon icon-74"></i>
+            </div>
+            <div class="page-category js-categoryInner">
+                <div class="weui_cells weui_cells_access" style="margin-top: 0px;">
+
+                    <a class="weui_cell" href="../weui2/c/base1.html">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p class="weui-reddot">。。。</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+                </div>
+            </div>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

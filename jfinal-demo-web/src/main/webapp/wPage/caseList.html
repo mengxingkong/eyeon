@@ -1,0 +1,49 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>事件浏览</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weUI/weui.css"/>
+    <link  rel="stylesheet" href="../weUI/example.css">
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+<div class="page__bd" style="height: 100%;">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            <div class="weui-panel weui-panel_access">
+                <div class="weui-panel__hd"><b>事件列表</b></div>
+                <div class="weui-panel__bd">
+                    #for(c:cases)
+                    <a href="/wPage/tipReportList?CaseID=#(c.ID)" class="weui-media-box weui-media-box_appmsg">
+                        <div class="weui-media-box__hd">
+                            <img class="weui-media-box__thumb" src="#(c.pic)" alt="" width="60px" height="60px">
+                        </div>
+                        <div class="weui-media-box__bd">
+                            <h4 class="weui-media-box__title">#(c.Depict) <--- #(c.AdminName)</h4>
+                            <p class="weui-media-box__desc">Budget:#(c.Budget)      Location:#(c.Location)</p>
+                            <p class="weui-media-box__desc">Time:#(c.Time)</p>
+                        </div>
+                        <div class="weui-panel__ft">
+                            <a href="/wPage/taskList?question=#(c.ID)" class="weui-cell weui-cell_access weui-cell_link">
+                                <div class="weui-cell__bd">查看任务</div>
+                                <span class="weui-cell__ft"></span>
+                            </a>
+                        </div>
+                    </a>
+                    #end
+                </div>
+            </div>
+        </div>
+        <div class="weui-tabbar">
+            <div class="weui-tabbar">
+                <a href="/wPage/homePage" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">主页</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

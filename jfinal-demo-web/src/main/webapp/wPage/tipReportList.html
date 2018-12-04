@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weUI/weui.css">
+    <link  rel="stylesheet" href="../weUI/example.css">
+    <title>简单举报</title>
+    <style type="text/css">
+        img{
+            width:60px;
+            height:50px;
+            margin-right:5px;
+            display:block;
+        }
+    </style>
+</head>
+<body>
+<div class="page__bd" style="height: 100%;">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            #for(tip : tipReports)
+            <div class="weui-panel">
+                <div class="weui-cells">
+                    <a class="weui-cell weui-cell_access" href="/wPage/articlePage?tipID=#(tip.ID)&status=#(tip.IsMore)">
+                        <div class="weui-cell__hd">
+                            <img src="#(tip.IMGDIR)" alt="">
+                        </div>
+                        <div class="weui-cell__bd">
+                            <p>地点：#(tip.Location)</p>
+                            <p>#(tip.Time)</p>
+                        </div>
+                        <div class="weui-cell__ft">
+                            <p>#(tip.ID)</p>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            #end
+        </div>
+
+        <div class="weui-tabbar">
+            <div class="weui-tabbar">
+                <a href="/wPage/homePage" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">主页</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

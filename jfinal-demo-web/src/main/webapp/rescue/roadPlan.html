@@ -1,0 +1,137 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weui2/style/weui.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui2.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui3.css"/>
+    <script src="../weui2/zepto.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kB1nQHtOYybtAbZYpXseO3cPMgAdsxHX"></script>
+    <script>
+        $(function(){
+            $('.weui-menu-inner').click(function () {
+                var $menu = $(this).find('ul'),
+                    height = $menu.find('li').length * 40 + 15 + 'px',
+                    opacity = $menu.css('opacity');
+
+                $('.weui-menu-inner ul').css({
+                    'top': '0',
+                    'opacity': '0'
+                });
+
+                if(opacity == 0) {
+                    $menu.css({
+                        'top': '-' + height,
+                        'opacity': 1
+                    });
+                }else {
+                    $menu.css({
+                        'top': 0,
+                        'opacity': 0
+                    });
+                }
+            });
+
+        });
+    </script>
+    <style type="text/css">
+    body, html {width: 100%;height: 100%; margin:0;font-family:"微软雅黑";}
+    #l-map{height:500px;width:100%;}
+    #r-result,#r-result table{width:100%;}
+    </style>
+</head>
+
+<body >
+
+<div id="l-map"></div>
+<div id="r-result"></div>
+
+<div class="weui_btn_area weui_btn_area_inline" id="btngru">
+    <a href="/rescue/showNearby" class="weui_btn bg-orange" >返回</a>
+    <a href="javascript:;" class="weui_btn weui_btn_primary" id="toRescue" >开始救援</a>
+</div>
+
+</body>
+</html>
+<script type="text/javascript">
+    // 百度地图API功能
+
+    var map = new BMap.Map("l-map");
+    var tr = new Object();
+    $(document).ready(function () {
+        var url = location.search; //获取url中"?"符后的字串
+        if (url.indexOf("?") != -1) {
+            var str = url.substr(1);
+            strs = str.split("&");
+            for(var i = 0; i < strs.length; i ++) {
+                tr[strs[i].split("=")[0]]=unescape(strs[i].split("=")[1]);
+            }
+        }
+        roadPlan();
+    });
+
+    function roadPlan() {
+        var p1 = new BMap.Point(tr.lng, tr.lat);
+        map.centerAndZoom(p1,12);
+        map.enableScrollWheelZoom();
+        var p2 = new BMap.Point(tr.lng1, tr.lat1);
+        var driving = new BMap.DrivingRoute(map, {renderOptions: {map: map, panel: "r-result", autoViewport: true}});
+        driving.search(p1,p2);
+    }
+    $("#toRescue").on("click",function () {
+        $.ajax({
+            type:"post",
+            url:"/rescue/exeRescue",
+            data:{
+                "resId":tr.resId
+            },
+            success:function (data) {
+                if("ok"===data.res){
+                    alert("ok -- 开始行动吧");
+                    insert();
+                    $("#toRescue").removeAttr("onclick");
+                }
+                else if("exited" === data.res){
+                    alert("您已经接收救援");
+                    insert();
+                    $("#toRescue").removeAttr("onclick");
+                }
+                else{
+                    alert("救援已经完成或者失败");
+                }
+            },
+            error:function () {
+
+            }
+        });
+    });
+    
+    function completeRescue() {
+        $.ajax({
+            type:"post",
+            url:"/rescue/completeExe",
+            data:{
+                "resId":tr.resId
+            },
+            success:function (data) {
+                if("ok"===data.res){
+                    alert("任务已经完成");
+                    $("#complete").text("已完成");
+                    $("#complete").removeAttr("onclick");
+                }
+                else{
+                    alert("救援未完成或者失败");
+                }
+            },
+            error:function () {
+
+            }
+        });
+    }
+
+    function insert() {
+        $("#btngru").append("<a href=\"javascript:;\" class=\"weui_btn bg-orange\" onclick=\"completeRescue()\" id=\"complete\" >完成</a>");
+    }
+
+</script>

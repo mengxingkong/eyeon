@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>举报详情</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weUI/weui.css"/>
+    <link  rel="stylesheet" href="../weUI/example.css">
+    <script type="text/javascript" src="../weUI/zepto.min.js"></script>
+    <script type="text/javascript" src="../weUI/voice.js"></script>
+
+</head>
+<body>
+<div class="page__bd" style="height: 100%;">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            <article class="weui-article">
+                <h1 style="text-align: center"> <b>举报详情</b> </h1>
+                <section>
+                    <section>
+                        <h3 >简单举报内容</h3>
+                        <p>
+                            <span>时间：#(tip.Time)</span><br />
+                            <span>地点：#(tip.Location)</span>
+                        </p>
+                        <p>
+                            <img src="#(tip.IMGDIR)" alt="">
+                        </p>
+                    </section>
+                    #if(tipMores!=null)
+                        #for(tipMore:tipMores)
+                        <section>
+                            <h3>复杂举报#(for.index+1)</h3>
+
+                            <button class="weui-btn weui-btn_mini weui-btn_primary play"  value="#(tipMore.SoundDir)"  style="float: left;" >播放语音</button>
+                            <button class="weui-btn weui-btn_mini weui-btn_primary stop" >停止播放</button>
+
+                            <br/>
+                            <br/>
+                            <p>
+                                #(tipMore.Depict)
+                            </p>
+                            #for(path:tipMore.plist)
+                            <p>
+                                <span>图片#(for.index+1)</span>
+                                <img src="#(path)" alt="">
+                            </p>
+                            #end
+                        </section>
+                        #end
+                    #end
+                </section>
+            </article>
+        </div>
+        <div class="weui-tabbar">
+            <div class="weui-tabbar">
+                <a href="/wPage/homePage" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">主页</p>
+                </a>
+                <a href="/wPage/taskList?question=#(tip.CaseID)" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">任务</p>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+
+    RongIMLib.RongIMVoice.init();
+    $(".play").on("click",function () {
+        var audioPath = $(this).val();
+        $.ajax({
+            type: "post",
+            url: "/wPage/playAudio",
+            data: {"audioPath":audioPath},
+            success: function (data) {
+
+                if("ok" === data["result"]){
+                    RongIMLib.RongIMVoice.play(data["base64"]);
+                }
+                else{
+                    alert("fail");
+                }
+            },
+            error: function () {
+                alert("请求出错");
+            }
+        });
+
+    });
+    $(".stop").on("click",function () {
+        RongIMLib.RongIMVoice.stop();
+    });
+</script>
+
+</html>

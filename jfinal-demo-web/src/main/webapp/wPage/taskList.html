@@ -1,0 +1,121 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>浏览任务</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weUI/weui.css"/>
+    <link  rel="stylesheet" href="../weUI/example.css">
+    <script type="text/javascript" src="../weUI/zepto.min.js"></script>
+    <script type="text/javascript">
+    </script>
+</head>
+<div class="page__bd" style="height: 100%;">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            #for(t:tasks)
+            <div class="weui-panel">
+                <div class="weui-panel__hd" style="">
+                    <b>任务   #(for.index+1)</b>
+                    <button class="weui-btn weui-btn_mini weui-btn_primary submit"  value="#(t.TaskID)" style="float: right;" >领取任务</button>
+                    <!--<a href="/wPage/taskAssign?taskID=#(t.TaskID)" class="weui-btn weui-btn_mini weui-btn_primary" style="float: right;" >领取任务</a>-->
+                </div>
+                <div class="weui-panel__bd">
+                    <div class="weui-media-box weui-media-box_text">
+                        <h4 class="weui-media-box__title">任务名称：#(t.Title)</h4>
+                        <p class="weui-media-box__desc">任务描述：#(t.Description)</p>
+                        <ul class="weui-media-box__info">
+                            <li class="weui-media-box__info__meta">#(t.TaskGPS)</li>
+                            <li class="weui-media-box__info__meta">#(t.Lifetime)</li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">其它信息</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            #end
+
+            #if(tasks.size() == 0)
+            <div class="icon-box" style="text-align: center;">
+                <i class="weui-icon-waiting weui-icon_msg" style="margin-top: 180px"></i>
+                <div class="icon-box__ctn">
+                    <h3 class="icon-box__title">Tip</h3>
+                    <p class="icon-box__desc">当前没有可接收任务</p>
+                </div>
+            </div>
+            #end
+
+        </div>
+        <div class="weui-tabbar">
+            <div class="weui-tabbar">
+                <a href="/wPage/homePage" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">主页</p>
+                </a>
+                <a href="/wPage/userTasks" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">已接任务</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="js_dialog" id="androidDialog1" style="display: none;">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog weui-skin_android">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title">确认领取</strong></div>
+            <div class="weui-dialog__bd">
+               任务领取后需要在规定时间内完成！！
+            </div>
+            <div class="weui-dialog__ft">
+                <a class="weui-dialog__btn weui-dialog__btn_default quit">Cancel</a>
+                <a class="weui-dialog__btn weui-dialog__btn_primary " id="confirm">Confirm</a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+
+<script type="text/javascript">
+    $(".submit").on('click',function () {
+        if($(this).text() === "已领取"){
+            alert("已经领取任务，快去完成吧！！！");
+        }
+        else {
+            this.setAttribute("id", "confirmActive");
+            $("#confirm").attr("data", this.value);
+            $("#androidDialog1").fadeIn(200);
+        }
+    });
+
+    $(".quit").on("click",function () {
+        $("#androidDialog1").fadeOut(200);
+    });
+
+
+    //js 函数放在文档后面 可以不用在 页面初始化时添加函数
+    $("#confirm").on("click",function () {
+        $("#androidDialog1").fadeOut(200);
+        var taskID = $(this).attr("data");
+        var $button  = $("#confirmActive");
+        alert(taskID);
+        $.ajax({
+            type: "post",
+            url: "/wPage/taskAssign",
+            data: {"taskID":taskID},
+            success: function (data) {
+                //真的坑啊
+                //需要一个加载框
+                if("ok" === data["result"]){
+                    $button.html("已领取");
+                }
+                else{
+                    $button.html("领取失败");
+                }
+            },
+            error: function () {
+                alert("请求出错");
+            }
+        });
+    });
+</script>
+</html>

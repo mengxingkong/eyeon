@@ -1,0 +1,187 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>任务分配</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weUI/weui.css"/>
+    <link  rel="stylesheet" href="../weUI/example.css">
+    <script type="text/javascript" src="../weUI/zepto.min.js"></script>
+
+</head>
+<div class="page__bd" style="height: 100%;">
+    <div class="weui-tab">
+        <div class="weui-tab__panel">
+            <div class="weui-tab__panel">
+
+                #for(t:tasks)
+                <div class="weui-panel__hd" style="">
+                    <b>任务   #(for.index+1)</b>
+                    <!--添加提示框-->
+                    <div style="float: right;">
+                        <button class="weui-btn weui-btn_mini weui-btn_primary dialogConfirm confirm#(t.AssignID)"  value="#(t.AssignID)" >领取任务</button>
+                        <button class="weui-btn weui-btn_mini weui-btn_warn dialogRefuse refuse#(t.AssignID)"  value="#(t.AssignID)"  >拒绝接收</button>
+                    </div>
+                </div>
+                <div class="weui-panel__bd">
+                    <div class="weui-media-box weui-media-box_text">
+                        <h4 class="weui-media-box__title">任务名称：#(t.Title)</h4>
+                        <p class="weui-media-box__desc">任务描述：#(t.Description)</p>
+                        <ul class="weui-media-box__info">
+                            <li class="weui-media-box__info__meta">#(t.TaskGPS)</li>
+                            <li class="weui-media-box__info__meta">#(t.Lifetime)</li>
+                            <li class="weui-media-box__info__meta weui-media-box__info__meta_extra">其它信息</li>
+                        </ul>
+                    </div>
+                </div>
+                #end
+
+                #if(tasks.size() == 0)
+                <div class="icon-box" style="text-align: center;">
+                    <i class="weui-icon-waiting weui-icon_msg" style="margin-top: 180px"></i>
+                    <div class="icon-box__ctn">
+                        <h3 class="icon-box__title">Tip</h3>
+                        <p class="icon-box__desc">系统没有给您分配任务哦</p>
+                    </div>
+                </div>
+                #end
+
+            </div>
+        </div>
+
+        <div class="weui-tabbar">
+            <div class="weui-tabbar">
+                <a href="/wPage/homePage" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">主页</p>
+                </a>
+                <a href="/wPage/userTasks" class="weui-tabbar__item">
+                    <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+                    <p class="weui-tabbar__label">已接任务</p>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="js_dialog" id="androidDialog1" style="display: none;">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog weui-skin_android">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title">确认接收</strong></div>
+            <div class="weui-dialog__bd">
+                接收任务需要在一定时间内完成，接收之后不可取消
+            </div>
+            <div class="weui-dialog__ft">
+                <a class="weui-dialog__btn weui-dialog__btn_default quit">Cancel</a>
+                <a class="weui-dialog__btn weui-dialog__btn_primary" id="confirm">Confirm</a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="js_dialog" id="androidDialog2" style="display: none;">
+        <div class="weui-mask"></div>
+        <div class="weui-dialog weui-skin_android">
+            <div class="weui-dialog__hd"><strong class="weui-dialog__title">确认取消</strong></div>
+            <div class="weui-dialog__bd">
+                取消任务之后不可重新接收任务
+            </div>
+            <div class="weui-dialog__ft">
+                <a class="weui-dialog__btn weui-dialog__btn_default quit">Cancel</a>
+                <a class="weui-dialog__btn weui-dialog__btn_primary " id="cancel">Confirm</a>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+</body>
+<script type="text/javascript">
+
+    $(".dialogConfirm").on('click',function () {
+        if($(this).text() === "已领取"){
+            alert("已经领取任务，快去完成吧！！！");
+        }
+        else {
+            this.setAttribute("id", "confirmActive");
+            $("#confirm").attr("data", this.value);
+            $("#androidDialog1").fadeIn(200);
+        }
+    });
+    $(".dialogRefuse").on('click',function () {
+        if($(this).text() === "已拒绝"){
+            alert("已经拒绝领取任务，任务已经重新分配了！！");
+        }
+        else {
+            this.setAttribute("id", "refuseActive");
+            $("#cancel").attr("data", this.value);
+            $("#androidDialog2").fadeIn(200);
+        }
+    });
+    $(".quit").on("click",function () {
+        $("#androidDialog1").fadeOut(200);
+        $("#androidDialog2").fadeOut(200);
+    });
+
+    $("#confirm").on("click",function () {
+        $("#androidDialog1").fadeOut(200);
+        var AssignID = $(this).attr("data");
+        var $button = $("#confirmActive");
+        var type = "confirm";
+        $.ajax({
+            type: "post",
+            url: "/wPage/assignConfirm",
+            data: {"type":type,"AssignID":AssignID},
+            success: function (data) {
+                //真的坑啊
+                //需要一个加载框
+                if("ok" === data["result"]){
+                    $button.html("已领取");
+                    //把拒绝按钮设置为不可见
+                    var bclass = "refuse"+AssignID;
+                    $("."+bclass).hide();
+                    window.location.href="/wPage/userTasks";
+                }
+                else if("refused" === data["result"]){
+                    $button.display = false;
+                    alert("已经拒绝接收任务，不能任务已经被重新分配");
+                }
+
+                else{ //过期的任务不能领取
+                    $button.html("已过期");
+                }
+            },
+            error: function () {
+                alert("请求出错");
+            }
+        });
+    });
+    $("#cancel").on("click",function () {
+        $("#androidDialog2").fadeOut(200);
+        var AssignID = $(this).attr("data");
+        var $button = $("#refuseActive");
+        var type = "cancel";
+        $.ajax({
+            type: "post",
+            url: "/wPage/assignConfirm",
+            data: {"type":type,"AssignID":AssignID},
+            success: function (data) {
+                //真的坑啊
+                //需要一个加载框
+                if("ok" === data["result"]){
+                    $button.html("已拒绝");
+                    var bclass = "confirm"+AssignID;
+                    $("."+bclass).hide();
+                }
+                else if("recieved" === data["result"]){
+                    alert("任务已经领取，暂时不能拒绝");
+                }
+            },
+            error: function () {
+                alert("请求出错");
+            }
+        });
+    });
+
+    //之后可以将两个js 函数河滨简化一下
+</script>
+</html>

@@ -1,0 +1,15 @@
+jdbcUrl = jdbc:mysql://localhost:3306/eyeon?characterEncoding=utf8&zeroDateTimeBehavior=convertToNull
+user = root
+password = 123456
+devMode = true
+showSql = true
+
+token = mstark
+appId = wx19e37fd297b61efd
+appSecret = 1724d6912e655091642248c6e2ea9248
+encryptMessage = false
+
+redirect_uri = http://mstark.free.ngrok.cc/wPage/index
+
+imgSave = D:/Jfinal-demo/jfinal-demo-web/src/main/webapp/evidence/tipreportMore
+

@@ -1,0 +1,142 @@
+
+<html lang="zh-cmn-Hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>个人主页</title>
+    <link rel="stylesheet" href="../weUI/weui.css">
+    <style>
+        .page_top{
+            width: 100%;
+            height: 100px;
+            background-color: #0D0D0D;
+        }
+        .headImg{
+            width:15%;
+            height:50px;
+            margin-left: 5%;
+            margin-top: 25px;
+        }
+        .nickName{
+            color: white;
+            margin-left: 5%;
+            margin-bottom: 25px;
+        }
+        .placeholder_tb{
+            height: 15px;
+            background-color: #C0BFC4;
+        }
+    </style>
+</head>
+<body>
+<div class="weui-flex">
+    <div class="weui-flex__item">
+        <div class="page_top" >
+            <img class="headImg" src="#(headImgUrl)" alt="user" >
+            <label class="nickName">#(nickName)</label>
+        </div>
+    </div>
+</div>
+<div class="weui-flex">
+    <div class="weui-flex__item"><div class="placeholder placeholder_tb"></div></div>
+</div>
+<div class="weui-flex">
+
+    <div class="weui-grids">
+        <a href="/wPage/userTasks" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui-grid__label">已接任务</p>
+        </a>
+        <a href="/wPage/userAssignment" class="weui-grid">
+            <div class="weui-grid__icon">
+                <span style="display: inline-block;position: relative;">
+                    <img src="../weUI/images/icon_nav_button.png" alt="">
+                    <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">#(unAccept)</span>
+                </span>
+            </div>
+            <p class="weui-grid__label">待接任务</p>
+        </a>
+        <a href="/jsPage/tipReportPage" class="weui-grid">
+            <!--/donation/loginIdentity-->
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_nav_button.png" alt="">
+            </div>
+            <p class="weui-grid__label">简单举报</p>
+
+        </a>
+        <a href="/rescue/index" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">救援模块</p>
+        </a>
+        <a href="/rescue/test.html" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">定位测试</p>
+        </a>
+        <a href="/wPage/jsPictureTest.html" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">...</p>
+        </a>
+        <a href="javascript:;" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">...</p>
+        </a>
+        <a href="javascript:;" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">...</p>
+        </a>
+        <a href="javascript:;" class="weui-grid">
+            <div class="weui-grid__icon">
+                <img src="../weUI/images/icon_tabbar.png" alt="">
+            </div>
+            <p class="weui-grid__label">...</p>
+        </a>
+    </div>
+
+</div>
+
+<div class="weui-tabbar">
+    <a href="/jsPage/tipReportMorePage" class="weui-tabbar__item weui-bar__item_on">
+        <span style="display: inline-block;position: relative;">
+            <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+
+        </span>
+        <p class="weui-tabbar__label">Eye'on</p>
+    </a>
+    <a href="/wPage/tipReportList" class="weui-tabbar__item">
+        <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">简单举报</p>
+    </a>
+    <a href="/wPage/caseList" class="weui-tabbar__item">
+        <span style="display: inline-block;position: relative;">
+            <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+        </span>
+        <p class="weui-tabbar__label">事件</p>
+    </a>
+    <a href="/wPage/taskList" class="weui-tabbar__item">
+        <img src="../weUI/images/icon_tabbar.png" alt="" class="weui-tabbar__icon">
+        <p class="weui-tabbar__label">任务</p>
+    </a>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('.weui-tabbar__item').on('click', function() {
+            $(this).addClass('weui-bar__item_on').siblings('.weui-bar__item_on').removeClass('weui-bar__item_on');
+        });
+    });
+</script>
+
+</body>
+</html>

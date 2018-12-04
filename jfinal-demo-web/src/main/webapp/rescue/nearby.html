@@ -1,0 +1,157 @@
+<html>
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weui2/style/weui.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui2.css"/>
+    <link rel="stylesheet" href="../weui2/style/weui3.css"/>
+    <script src="../weui2/zepto.min.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=kB1nQHtOYybtAbZYpXseO3cPMgAdsxHX"></script>
+    <script>
+        $(function(){
+            $('.weui-menu-inner').click(function () {
+                var $menu = $(this).find('ul'),
+                    height = $menu.find('li').length * 40 + 15 + 'px',
+                    opacity = $menu.css('opacity');
+
+                $('.weui-menu-inner ul').css({
+                    'top': '0',
+                    'opacity': '0'
+                });
+
+                if(opacity == 0) {
+                    $menu.css({
+                        'top': '-' + height,
+                        'opacity': 1
+                    });
+                }else {
+                    $menu.css({
+                        'top': 0,
+                        'opacity': 0
+                    });
+                }
+            });
+
+        });
+    </script>
+    <style type="text/css">
+        body, html,#allmap {width: 100%;height: 100%;overflow: hidden;margin:0;font-family:"微软雅黑";}
+    </style>
+</head>
+
+<body >
+<div id="allmap">
+
+</div>
+<div id="hide">
+    <input hidden="hidden" value="#(lng)" id="lng" />
+    <input hidden="hidden" value="#(lat)" id="lat"/>
+</div>
+<section class="weui-menu">
+    <div class="weui-menu-inner" id="nearby">
+        <em></em>
+        <span>附近状况</span>
+    </div>
+    <div class="weui-menu-inner" id="rescuer">
+        <em></em>
+        <span>救援人</span>
+    </div>
+    <div class="weui-menu-inner">
+        <em></em>
+        <span>上线测试</span>
+        <ul>
+            <em></em>
+            <li>百度地图</li>
+        </ul>
+    </div>
+</section>
+</body>
+</html>
+
+<script type="text/javascript">
+
+    var map = new BMap.Map("allmap");
+    var point = new BMap.Point($("#lng").val(),$("#lat").val());
+    map.centerAndZoom(point, 15);
+    map.enableScrollWheelZoom();
+
+
+    function addMarker(point){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        marker.setAnimation(BMAP_ANIMATION_BOUNCE);
+        var myGeo = new BMap.Geocoder();
+        marker.addEventListener("click", function(){
+            myGeo.getLocation(point, function(result){
+                if (result){
+                    alert(result.address);
+                }
+            });
+        });
+    }
+    addMarker(point);
+
+
+    var opts = {
+        width : 200,     // 信息窗口宽度
+        height: 100,     // 信息窗口高度
+        title : "求救信息：" , // 信息窗口标题
+        enableMessage:true,//设置允许信息窗发送短息
+        message:"hello"
+    };
+    function addMarker2(point,res){
+        var marker = new BMap.Marker(point);
+        map.addOverlay(marker);
+        getAddress(point,function (finalAddress) {
+            var add = finalAddress;
+            var infoWindow = new BMap.InfoWindow("<span style=\"font-size:8px\">地点:'"+add+"'</span><br>" +
+                "<span style=\"font-size:8px\">人员信息:'"+res.HelpName+res.Phone+"\n"+res.Describe+"'</span>" +
+                "<br><button id='road' onclick='roadPlan(this)' value='"+point.lng+","+point.lat+","+res.Id+"'  >路线规划<button />", opts);  // 创建信息窗口对
+            marker.addEventListener("click", function(){
+                map.openInfoWindow(infoWindow,point); //开启信息窗口
+            });
+        });
+    }
+
+    function roadPlan(_this) {
+        var loc = _this.value.split(",");
+        window.location.href="/rescue/roadPlan.html?resId="+loc[2]+"&lng="+$("#lng").val()+"&lat="+$("#lat").val()+"&lng1="+loc[0]+"&lat1="+loc[1];
+    }
+    function getAddress(point,callback) {
+        var add = "";
+        var myGeo = new BMap.Geocoder();
+        myGeo.getLocation(point, function(result){
+            if (result){
+                add = result.address;
+                callback(add);
+            }
+        });
+
+    }
+
+    $("#nearby").on("click",function(){
+        $.ajax({
+            type:"post",
+            url:"/rescue/showNearbyInfo",
+            data:{
+                "lng":$("#lng").val(),
+                "lat":$("#lat").val()
+            },
+            success:function (data) {
+                var dt = data.rescues;
+                for(var i in dt){
+                    var lng = dt[i].Longitude;
+                    var lat = dt[i].Latitude;
+                    var point = new BMap.Point(lng,lat);
+                    addMarker2(point,dt[i]);
+                }
+            },
+            error:function () {
+
+            }
+        });
+    });
+
+
+</script>

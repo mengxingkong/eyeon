@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>救援分配</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" href="../weui2/style/weui.css" />
+    <link rel="stylesheet" href="../weui2/style/weui2.css" />
+    <link rel="stylesheet" href="../weui2/style/weui3.css" />
+    <script src="../weui2/zepto.min.js"></script>
+    <script src="../weui2/php.js"></script>
+    <script>
+        $(function() {
+            /* document.querySelector('body').addEventListener('touchmove', function(e) {
+    e.preventDefault();
+})*/
+            $('.js-category').click(function() {
+                $parent = $(this).parent('li');
+                if ($parent.hasClass('js-show')) {
+                    $parent.removeClass('js-show');
+                    $(this).children('i').removeClass('icon-35').addClass('icon-74');
+                } else {
+                    $parent.siblings().removeClass('js-show');
+                    $parent.addClass('js-show');
+                    $(this).children('i').removeClass('icon-74').addClass('icon-35');
+                    $parent.siblings().find('i').removeClass('icon-35').addClass('icon-74');
+                }
+            });
+
+
+        });
+    </script>
+</head>
+
+<body ontouchstart class="page-bg">
+<div class="page-bd">
+    <ul>
+    #for(r : rs)
+        <li>
+            <div class="weui-flex js-category">
+                <div class="weui-flex-item">
+                    #(r.RescueInformation)
+                </div>
+                <i class="icon icon-74"></i>
+            </div>
+            <div class="page-category js-categoryInner">
+                <div class="weui_cells weui_cells_access" style="margin-top: 0px;">
+                    <a class="weui_cell" href="javascript:;">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>
+                                #(r.HelpName)|#(r.Phone)|#(r.Address)
+                            </p>
+                            <p>
+                                #(r.Describe)
+                            </p>
+                        </div>
+                    </a>
+                    <a class="weui_cell" href="/rescue/searchDistribute.html?resId=#(r.Id)">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <p>点击查看</p>
+                        </div>
+                        <div class="weui_cell_ft"></div>
+                    </a>
+                </div>
+            </div>
+        </li>
+    #end
+    </ul>
+</div>
+</body>
+</html>
