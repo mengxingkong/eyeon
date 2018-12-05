@@ -25,10 +25,18 @@ public class WeixinApiController extends ApiController {
         String appId = config.getStr("AppID");
         String redirect_url = config.getStr("Redirect");
 
-        authorizeURL="http://eyeon.natapp1.cc/eyeon/index?state=homePage";
+        //authorizeURL="http://eyeon.natapp1.cc/eyeon/index?state=homePage";
+
+        authorizeURL = "http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+
         authorizeURL_tip="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
-        authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=userTasks";
-        authorizeURL_assign ="http://eyeon.natapp1.cc/eyeon/index?state=userAssignment";
+
+        //authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=userTasks";
+
+        authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+
+        //authorizeURL_assign ="http://eyeon.natapp1.cc/eyeon/index?state=userAssignment";
+        authorizeURL_assign="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
 
 //        authorizeURL = SnsAccessTokenApi.getAuthorizeURL(appId,redirect_url,"homePage",false);
 //        authorizeURL_tip = SnsAccessTokenApi.getAuthorizeURL(appId,redirect_url,"tipReport",false);
@@ -99,7 +107,7 @@ public class WeixinApiController extends ApiController {
                 "            \"type\": \"view\"\n" +
                 "        },\n" +
                 "        {\n" +
-                "            \"name\": \"历史消息\",\n" +
+                "            \"name\": \"功能\",\n" +
                 "            \"sub_button\": [\n" +
                 "                 {\n" +
                 "                   \"type\": \"view\",\n" +
@@ -119,7 +127,7 @@ public class WeixinApiController extends ApiController {
                 "              ]\n" +
                 "        },\n" +
                 "        {\n" +
-                "          \"name\": \"Eye'on网页\",\n" +
+                "          \"name\": \"EyeON主页\",\n" +
                 "          \"url\":\""+this.authorizeURL+"\",\n"+
                 "          \"type\":\"view\"\n"+
                 "        }\n" +
