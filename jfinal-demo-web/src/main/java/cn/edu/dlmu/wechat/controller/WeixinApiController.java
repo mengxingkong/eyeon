@@ -24,19 +24,20 @@ public class WeixinApiController extends ApiController {
         Config config = ConfigService.getConfig();
         String appId = config.getStr("AppID");
         String redirect_url = config.getStr("Redirect");
+        String url = config.get("Redirect");
 
-        //authorizeURL="http://eyeon.natapp1.cc/eyeon/index?state=homePage";
+        authorizeURL= url+"/eyeon/index?state=homePage";
 
-        authorizeURL = "http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+        //authorizeURL = "http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
 
-        authorizeURL_tip="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+        authorizeURL_tip= url+"/eyeon/index?state=tipReport";
 
-        //authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=userTasks";
+        authorizeURL_task= url+"/eyeon/index?state=userTasks";
 
-        authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+        //authorizeURL_task="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
 
-        //authorizeURL_assign ="http://eyeon.natapp1.cc/eyeon/index?state=userAssignment";
-        authorizeURL_assign="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
+        authorizeURL_assign = url+"/eyeon/index?state=userAssignment";
+        //authorizeURL_assign="http://eyeon.natapp1.cc/eyeon/index?state=tipReport";
 
 //        authorizeURL = SnsAccessTokenApi.getAuthorizeURL(appId,redirect_url,"homePage",false);
 //        authorizeURL_tip = SnsAccessTokenApi.getAuthorizeURL(appId,redirect_url,"tipReport",false);
